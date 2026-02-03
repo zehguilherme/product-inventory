@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# testing
+coverage
+
+# production
+build
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +28,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
