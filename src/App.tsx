@@ -1,9 +1,13 @@
-function App() {
+import { Route, Routes } from 'react-router'
+
+import { Home } from './pages/Home'
+
+export function App() {
   return (
-    <>
-      <h1>Olá</h1>
-    </>
+    <div className="font-display h-screen">
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </div>
   )
 }
-
-export default App
