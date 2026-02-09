@@ -1,8 +1,13 @@
+import { useState } from 'react'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
+import { Input } from '../components/Form/Input'
 import { Plus } from '../components/icons/Plus'
+import { Magnifier } from '../components/icons/Magnifier'
 
 export const Home = () => {
+  const [searchInput, setSearchInput] = useState('')
+
   return (
     <div className="px-3 py-8">
       <section className="mx-auto max-w-342">
@@ -21,7 +26,7 @@ export const Home = () => {
           </Button>
         </div>
 
-        <div className="flex flex-col gap-4 md:flex-row">
+        <div className="mb-6 flex flex-col gap-4 md:flex-row">
           <Card title="Total de Produtos" quantity={12} />
 
           <Card title="Em Estoque" quantity={12} variant="inStock" />
@@ -30,6 +35,19 @@ export const Home = () => {
 
           <Card title="Sem Estoque" quantity={12} variant="outStock" />
         </div>
+
+        <form>
+          <Input
+            id="search"
+            name="search"
+            placeholder="Buscar por nome..."
+            type="search"
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
+          >
+            <Magnifier />
+          </Input>
+        </form>
       </section>
     </div>
   )
