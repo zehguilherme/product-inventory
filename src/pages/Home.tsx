@@ -1,10 +1,21 @@
 import { useState } from 'react'
+
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Input } from '../components/Form/Input'
 import { Plus } from '../components/icons/Plus'
 import { Magnifier } from '../components/icons/Magnifier'
 import { Select } from '../components/Form/Select'
+import { Table } from '../components/Table'
+
+interface TableRow {
+  name: string
+  category: string
+  price: string
+  quantity: number
+  minQuantity: number
+  id: string
+}
 
 export const Home = () => {
   const [searchInput, setSearchInput] = useState('')
@@ -45,6 +56,43 @@ export const Home = () => {
     },
   ]
 
+  const tableColumnNames = [
+    'Nome',
+    'Categoria',
+    'Preço',
+    'Quantidade',
+    'Qtd. Mínima',
+    'Status',
+    'Ações',
+  ]
+
+  const tableRows: TableRow[] = [
+    {
+      id: '1',
+      name: 'iPhone 15 Pro',
+      category: 'Eletrônicos',
+      price: 'R$ 7.999,00',
+      quantity: 25,
+      minQuantity: 5,
+    },
+    {
+      id: '2',
+      name: 'Camiseta Básica',
+      category: 'Roupas',
+      price: 'R$ 49,90',
+      quantity: 8,
+      minQuantity: 10,
+    },
+    {
+      id: '3',
+      name: 'Arroz Integral 5kg',
+      category: 'Alimentos',
+      price: 'R$ 32,50',
+      quantity: 0,
+      minQuantity: 20,
+    },
+  ]
+
   return (
     <div className="px-3 py-8">
       <section className="mx-auto max-w-342">
@@ -73,7 +121,7 @@ export const Home = () => {
           <Card title="Sem Estoque" quantity={12} variant="outStock" />
         </div>
 
-        <form className="flex flex-col gap-4 sm:flex-row">
+        <form className="mb-6 flex flex-col gap-4 sm:flex-row">
           <Input
             id="search"
             name="search"
@@ -108,6 +156,8 @@ export const Home = () => {
             />
           </div>
         </form>
+
+        <Table columnNames={tableColumnNames} rows={tableRows} />
       </section>
     </div>
   )
