@@ -11,6 +11,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type: InputType
   disabled?: boolean
   error?: string
+  containerClassName?: string
   labelClassName?: string
   inputClassName?: string
   children?: ReactNode
@@ -26,6 +27,7 @@ export const Input = ({
   type,
   disabled,
   error,
+  containerClassName,
   labelClassName,
   inputClassName,
   onChange,
@@ -35,8 +37,8 @@ export const Input = ({
   const hasIcon = Boolean(children)
 
   return (
-    <>
-      <div className="flex flex-col gap-3.25">
+    <div className={`flex w-full flex-col ${containerClassName}`}>
+      <div className="flex w-full flex-col gap-3.25">
         {label && (
           <label
             htmlFor={id}
@@ -68,6 +70,6 @@ export const Input = ({
       </div>
 
       {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
-    </>
+    </div>
   )
 }

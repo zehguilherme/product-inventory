@@ -4,9 +4,46 @@ import { Card } from '../components/Card'
 import { Input } from '../components/Form/Input'
 import { Plus } from '../components/icons/Plus'
 import { Magnifier } from '../components/icons/Magnifier'
+import { Select } from '../components/Form/Select'
 
 export const Home = () => {
   const [searchInput, setSearchInput] = useState('')
+  const [categoryInput, setCategoryInput] = useState('')
+  const [statusInput, setStatusInput] = useState('')
+
+  const categoriesList = [
+    {
+      value: 'perifericos',
+      text: 'Periféricos',
+    },
+    {
+      value: 'monitores',
+      text: 'Monitores',
+    },
+    {
+      value: 'armazenamento',
+      text: 'Armazenamento',
+    },
+    {
+      value: 'computadores',
+      text: 'Computadores',
+    },
+  ]
+
+  const statusList = [
+    {
+      value: 'estoque',
+      text: 'Em Estoque',
+    },
+    {
+      value: 'estoque-baixo',
+      text: 'Estoque Baixo',
+    },
+    {
+      value: 'sem-estoque',
+      text: 'Sem Estoque',
+    },
+  ]
 
   return (
     <div className="px-3 py-8">
@@ -26,7 +63,7 @@ export const Home = () => {
           </Button>
         </div>
 
-        <div className="mb-6 flex flex-col gap-4 md:flex-row">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row">
           <Card title="Total de Produtos" quantity={12} />
 
           <Card title="Em Estoque" quantity={12} variant="inStock" />
@@ -36,17 +73,40 @@ export const Home = () => {
           <Card title="Sem Estoque" quantity={12} variant="outStock" />
         </div>
 
-        <form>
+        <form className="flex flex-col gap-4 sm:flex-row">
           <Input
             id="search"
             name="search"
             placeholder="Buscar por nome..."
             type="search"
             value={searchInput}
+            containerClassName="sm:max-w-[980px]"
             onChange={e => setSearchInput(e.target.value)}
           >
             <Magnifier />
           </Input>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Select
+              id="category"
+              name="category"
+              value={categoryInput}
+              optionsList={categoriesList}
+              defaultOptionText="Selecione uma categoria..."
+              containerClassName="sm:max-w-[180px]"
+              onChange={e => setCategoryInput(e.target.value)}
+            />
+
+            <Select
+              id="status"
+              name="status"
+              value={statusInput}
+              optionsList={statusList}
+              defaultOptionText="Selecione um status..."
+              containerClassName="sm:max-w-[180px]"
+              onChange={e => setStatusInput(e.target.value)}
+            />
+          </div>
         </form>
       </section>
     </div>
