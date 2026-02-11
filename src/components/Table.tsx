@@ -45,7 +45,10 @@ export const Table = ({ columnNames, rows }: TableProps) => {
         <tbody>
           {rows &&
             rows.map(row => (
-              <tr key={row.id}>
+              <tr
+                key={row.id}
+                className="border-b-mystic border border-x-0 last:border-b-0"
+              >
                 <td className="text-ebony px-4 py-[22.5px] text-[14px]/[20px] font-medium">
                   {row.name}
                 </td>
