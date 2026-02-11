@@ -15,13 +15,22 @@ interface TableRow {
 interface TableProps {
   columnNames: string[]
   rows: TableRow[]
+  openModalDeleteProduct: (product: TableRow) => void
 }
 
-export const Table = ({ columnNames, rows }: TableProps) => {
+export const Table = ({
+  columnNames,
+  rows,
+  openModalDeleteProduct,
+}: TableProps) => {
   const getStockStatus = (quantity: number, minQuantity: number) => {
-    if (quantity === 0) return 'Sem Estoque'
+    if (quantity === 0) {
+      return 'Sem Estoque'
+    }
 
-    if (quantity <= minQuantity) return 'Estoque Baixo'
+    if (quantity <= minQuantity) {
+      return 'Estoque Baixo'
+    }
 
     return 'Em Estoque'
   }
@@ -98,6 +107,7 @@ export const Table = ({ columnNames, rows }: TableProps) => {
                     <button
                       title="Excluir"
                       className="hover:bg-catskill-white cursor-pointer rounded-md p-2"
+                      onClick={() => openModalDeleteProduct(row)}
                     >
                       <Trash className="text-slate-gray h-4" />
                     </button>
