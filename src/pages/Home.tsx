@@ -7,6 +7,7 @@ import { Plus } from '../components/icons/Plus'
 import { Magnifier } from '../components/icons/Magnifier'
 import { Select } from '../components/Form/Select'
 import { Table } from '../components/Table'
+import { DeleteModal } from '../components/DeleteModal'
 
 interface TableRow {
   name: string
@@ -22,7 +23,10 @@ export const Home = () => {
   const [categoryInput, setCategoryInput] = useState('')
   const [statusInput, setStatusInput] = useState('')
 
-  const categoriesList = [
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [productToDelete, setProductToDelete] = useState<TableRow | null>(null)
+
+  const [categoriesList] = useState([
     {
       value: 'perifericos',
       text: 'Periféricos',
@@ -39,9 +43,9 @@ export const Home = () => {
       value: 'computadores',
       text: 'Computadores',
     },
-  ]
+  ])
 
-  const statusList = [
+  const [statusList] = useState([
     {
       value: 'estoque',
       text: 'Em Estoque',
@@ -54,7 +58,7 @@ export const Home = () => {
       value: 'sem-estoque',
       text: 'Sem Estoque',
     },
-  ]
+  ])
 
   const tableColumnNames = [
     'Nome',
@@ -157,7 +161,25 @@ export const Home = () => {
           </div>
         </form>
 
-        <Table columnNames={tableColumnNames} rows={tableRows} />
+        <Table
+          columnNames={tableColumnNames}
+          rows={tableRows}
+          openModalDeleteProduct={(product: TableRow) => {
+            setProductToDelete(product)
+            setModalIsOpen(true)
+          }}
+        />
+
+        <DeleteModal
+          isOpen={modalIsOpen}
+          title="Remover Produto"
+          productName={productToDelete?.name || ''}
+          deleteProduct={() => {}}
+          onClose={() => {
+            setModalIsOpen(false)
+            setProductToDelete(null)
+          }}
+        ></DeleteModal>
       </section>
     </div>
   )
