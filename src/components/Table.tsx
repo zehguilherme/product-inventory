@@ -99,14 +99,14 @@ export const Table = ({
                     <Link
                       to={`/produto/${row.id}`}
                       title="Editar"
-                      className="hover:bg-catskill-white inline-block rounded-md p-2"
+                      className="hover:bg-catskill-white2 inline-block rounded-md p-2"
                     >
                       <Pencil className="text-slate-gray h-4" />
                     </Link>
 
                     <button
                       title="Excluir"
-                      className="hover:bg-catskill-white cursor-pointer rounded-md p-2"
+                      className="hover:bg-catskill-white2 cursor-pointer rounded-md p-2"
                       onClick={() => openModalDeleteProduct(row)}
                     >
                       <Trash className="text-slate-gray h-4" />
