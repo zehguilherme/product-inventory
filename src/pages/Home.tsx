@@ -26,8 +26,8 @@ export const Home = () => {
 
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [errorModalIsOpen, setErrorModalIsOpen] = useState(false)
-  const [errorTitle, setErrorTitle] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const [errorTitle] = useState('')
+  const [errorMessage] = useState('')
 
   const [productToDelete, setProductToDelete] = useState<TableRow | null>(null)
 
