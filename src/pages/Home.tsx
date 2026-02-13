@@ -23,7 +23,7 @@ export const Home = () => {
   const [categoryInput, setCategoryInput] = useState('')
   const [statusInput, setStatusInput] = useState('')
 
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [productToDelete, setProductToDelete] = useState<TableRow | null>(null)
 
   const [categoriesList] = useState([
@@ -166,20 +166,20 @@ export const Home = () => {
           rows={tableRows}
           openModalDeleteProduct={(product: TableRow) => {
             setProductToDelete(product)
-            setModalIsOpen(true)
+            setDeleteModalIsOpen(true)
           }}
         />
 
         <DeleteModal
-          isOpen={modalIsOpen}
+          isOpen={deleteModalIsOpen}
           title="Remover Produto"
           productName={productToDelete?.name || ''}
           deleteProduct={() => {}}
           onClose={() => {
-            setModalIsOpen(false)
+            setDeleteModalIsOpen(false)
             setProductToDelete(null)
           }}
-        ></DeleteModal>
+        />
       </section>
     </div>
   )
