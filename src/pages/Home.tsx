@@ -8,6 +8,7 @@ import { Magnifier } from '../components/icons/Magnifier'
 import { Select } from '../components/Form/Select'
 import { Table } from '../components/Table'
 import { DeleteModal } from '../components/DeleteModal'
+import { ErrorModal } from '../components/ErrorModal'
 
 interface TableRow {
   name: string
@@ -24,6 +25,10 @@ export const Home = () => {
   const [statusInput, setStatusInput] = useState('')
 
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
+  const [errorModalIsOpen, setErrorModalIsOpen] = useState(false)
+  const [errorTitle, setErrorTitle] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+
   const [productToDelete, setProductToDelete] = useState<TableRow | null>(null)
 
   const [categoriesList] = useState([
@@ -178,6 +183,15 @@ export const Home = () => {
           onClose={() => {
             setDeleteModalIsOpen(false)
             setProductToDelete(null)
+          }}
+        />
+
+        <ErrorModal
+          isOpen={errorModalIsOpen}
+          title={errorTitle}
+          message={errorMessage}
+          onClose={() => {
+            setErrorModalIsOpen(false)
           }}
         />
       </section>
