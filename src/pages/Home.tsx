@@ -33,20 +33,20 @@ export const Home = () => {
 
   const [categoriesList] = useState([
     {
-      value: 'perifericos',
-      text: 'Periféricos',
-    },
-    {
-      value: 'monitores',
-      text: 'Monitores',
-    },
-    {
       value: 'armazenamento',
       text: 'Armazenamento',
     },
     {
       value: 'computadores',
       text: 'Computadores',
+    },
+    {
+      value: 'monitores',
+      text: 'Monitores',
+    },
+    {
+      value: 'perifericos',
+      text: 'Periféricos',
     },
   ])
 
