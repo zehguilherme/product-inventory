@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios, { type AxiosResponse } from 'axios'
 
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -26,8 +27,8 @@ export const Home = () => {
 
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [errorModalIsOpen, setErrorModalIsOpen] = useState(false)
-  const [errorTitle] = useState('')
-  const [errorMessage] = useState('')
+  const [errorTitle, setErrorTitle] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const [productToDelete, setProductToDelete] = useState<TableRow | null>(null)
 
@@ -75,32 +76,29 @@ export const Home = () => {
     'Ações',
   ]
 
-  const tableRows: TableRow[] = [
-    {
-      id: '1',
-      name: 'iPhone 15 Pro',
-      category: 'Eletrônicos',
-      price: 'R$ 7.999,00',
-      quantity: 25,
-      minQuantity: 5,
-    },
-    {
-      id: '2',
-      name: 'Camiseta Básica',
-      category: 'Roupas',
-      price: 'R$ 49,90',
-      quantity: 8,
-      minQuantity: 10,
-    },
-    {
-      id: '3',
-      name: 'Arroz Integral 5kg',
-      category: 'Alimentos',
-      price: 'R$ 32,50',
-      quantity: 0,
-      minQuantity: 20,
-    },
-  ]
+  const [tableRows, setTableRows] = useState<TableRow[]>([])
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const products: AxiosResponse<TableRow[]> = await axios.get(
+          `${import.meta.env.VITE_API_URL}/products`
+        )
+
+        setTableRows(products.data)
+      } catch (error: unknown) {
+        setErrorModalIsOpen(true)
+
+        setErrorTitle('Erro')
+
+        if (error instanceof Error) {
+          setErrorMessage(error.message)
+        }
+      }
+    }
+
+    getProducts()
+  }, [])
 
   return (
     <main className="px-3 py-8">
@@ -121,7 +119,7 @@ export const Home = () => {
         </header>
 
         <div className="mb-8 flex flex-col gap-4 md:flex-row">
-          <Card title="Total de Produtos" quantity={12} />
+          <Card title="Total de Produtos" quantity={tableRows.length} />
 
           <Card title="Em Estoque" quantity={12} variant="inStock" />
 

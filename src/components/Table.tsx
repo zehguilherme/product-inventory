@@ -69,7 +69,7 @@ export const Table = ({
                 </td>
 
                 <td className="text-ebony px-4 py-[22.5px] text-[14px]/[20px] font-medium">
-                  {row.price}
+                  R$ {row.price}
                 </td>
 
                 <td className="text-ebony px-4 py-[22.5px] text-[14px]/[20px] font-medium">
