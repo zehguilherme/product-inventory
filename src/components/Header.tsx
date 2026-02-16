@@ -10,7 +10,7 @@ export const Header = () => {
             <Box className="text-catskill-white h-5" />
           </div>
 
-          <h1 className="text-[20px]/[28px] font-bold">EstoqueApp</h1>
+          <p className="text-[20px]/[28px] font-bold">EstoqueApp</p>
         </Link>
       </div>
     </header>
