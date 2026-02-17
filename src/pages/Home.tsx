@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 import axios, { type AxiosResponse } from 'axios'
 
 import { Button } from '../components/Button'
@@ -78,6 +79,12 @@ export const Home = () => {
 
   const [tableRows, setTableRows] = useState<TableRow[]>([])
 
+  const navigate = useNavigate()
+
+  const navigateToNewProductPage = () => {
+    navigate('produto')
+  }
+
   const getProductStockStatus = (
     quantity: number,
     minQuantity: number
@@ -141,7 +148,10 @@ export const Home = () => {
             </p>
           </div>
 
-          <Button onClick={() => {}} className="w-full gap-4 sm:w-auto">
+          <Button
+            onClick={navigateToNewProductPage}
+            className="w-full gap-4 sm:w-auto"
+          >
             <Plus className="text-catskill-white h-4" />
             Novo Produto
           </Button>
