@@ -23,7 +23,10 @@ export const Table = ({
   rows,
   openModalDeleteProduct,
 }: TableProps) => {
-  const getStockStatus = (quantity: number, minQuantity: number) => {
+  const getProductStockStatus = (
+    quantity: number,
+    minQuantity: number
+  ): 'Sem Estoque' | 'Estoque Baixo' | 'Em Estoque' => {
     if (quantity === 0) {
       return 'Sem Estoque'
     }
@@ -82,14 +85,14 @@ export const Table = ({
 
                 <td className="px-4 py-[22.5px]">
                   <div
-                    className={`${getStockStatus(row.quantity, row.minQuantity) === 'Em Estoque' ? 'bg-cinderella text-salem' : getStockStatus(row.quantity, row.minQuantity) === 'Estoque Baixo' ? 'bg-light-yellow text-buttercup' : 'text-flamingo bg-light-red'} flex max-w-fit items-center gap-1.5 rounded-full px-3 py-1`}
+                    className={`${getProductStockStatus(row.quantity, row.minQuantity) === 'Em Estoque' ? 'bg-cinderella text-salem' : getProductStockStatus(row.quantity, row.minQuantity) === 'Estoque Baixo' ? 'bg-light-yellow text-buttercup' : 'text-flamingo bg-light-red'} flex max-w-fit items-center gap-1.5 rounded-full px-3 py-1`}
                   >
                     <span>
                       <Circle className="h-1.5" />
                     </span>
 
                     <span className="inline-block text-[12px]/[16px] font-medium">
-                      {getStockStatus(row.quantity, row.minQuantity)}
+                      {getProductStockStatus(row.quantity, row.minQuantity)}
                     </span>
                   </div>
                 </td>
