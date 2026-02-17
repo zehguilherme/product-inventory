@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import axios, { type AxiosResponse } from 'axios'
 
 import { Button } from '../components/Button'
@@ -78,6 +78,21 @@ export const Home = () => {
 
   const [tableRows, setTableRows] = useState<TableRow[]>([])
 
+  const getProductStockStatus = (
+    quantity: number,
+    minQuantity: number
+  ): 'Sem Estoque' | 'Estoque Baixo' | 'Em Estoque' => {
+    if (quantity === 0) {
+      return 'Sem Estoque'
+    }
+
+    if (quantity <= minQuantity) {
+      return 'Estoque Baixo'
+    }
+
+    return 'Em Estoque'
+  }
+
   useEffect(() => {
     const getProducts = async () => {
       try {
@@ -100,6 +115,20 @@ export const Home = () => {
     getProducts()
   }, [])
 
+  const productStatusCount = useMemo(() => {
+    const statusArray = tableRows.map(row =>
+      getProductStockStatus(row.quantity, row.minQuantity)
+    )
+
+    return statusArray.reduce(
+      (counts, status) => {
+        counts[status] = (counts[status] || 0) + 1
+        return counts
+      },
+      {} as Record<'Em Estoque' | 'Estoque Baixo' | 'Sem Estoque', number>
+    )
+  }, [tableRows])
+
   return (
     <main className="px-3 py-8">
       <section className="mx-auto max-w-342">
@@ -121,11 +150,23 @@ export const Home = () => {
         <div className="mb-8 flex flex-col gap-4 md:flex-row">
           <Card title="Total de Produtos" quantity={tableRows.length} />
 
-          <Card title="Em Estoque" quantity={12} variant="inStock" />
+          <Card
+            title="Em Estoque"
+            quantity={productStatusCount['Em Estoque'] || 0}
+            variant="inStock"
+          />
 
-          <Card title="Estoque Baixo" quantity={12} variant="lowStock" />
+          <Card
+            title="Estoque Baixo"
+            quantity={productStatusCount['Estoque Baixo'] || 0}
+            variant="lowStock"
+          />
 
-          <Card title="Sem Estoque" quantity={12} variant="outStock" />
+          <Card
+            title="Sem Estoque"
+            quantity={productStatusCount['Sem Estoque'] || 0}
+            variant="outStock"
+          />
         </div>
 
         <form className="mb-6 flex flex-col gap-4 sm:flex-row">
