@@ -96,7 +96,7 @@ export const Product = () => {
       if (response.status === 201 && response.data) {
         const product = response.data
 
-        toast(`Produto ${product.name} adicionado com sucesso!`, {
+        toast(`Produto "${product.name}" adicionado com sucesso!`, {
           type: 'success',
         })
 
