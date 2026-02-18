@@ -16,8 +16,8 @@ export const Product = () => {
   const [productNameInput, setProductNameInput] = useState('')
   const [categoryInput, setCategoryInput] = useState('')
   const [priceInput, setPriceInput] = useState('')
-  const [quantityInput, setQuantityInput] = useState('')
-  const [minQuantityInput, setMinQuantityInput] = useState('')
+  const [quantityInput, setQuantityInput] = useState(0)
+  const [minQuantityInput, setMinQuantityInput] = useState(0)
 
   const [errorModalIsOpen, setErrorModalIsOpen] = useState(false)
   const [errorTitle, setErrorTitle] = useState('')
@@ -61,18 +61,12 @@ export const Product = () => {
     price: z.string().trim().min(1, {
       message: 'Campo obrigatório',
     }),
-    quantity: z.coerce
-      .number()
-      .min(0, {
-        message: 'Campo obrigatório',
-      })
-      .nonnegative(),
-    minQuantity: z.coerce
-      .number()
-      .min(1, {
-        message: 'Insira pelos menos 1 item',
-      })
-      .nonnegative(),
+    quantity: z.coerce.number().min(0, {
+      message: 'Valor não pode ser negativo',
+    }),
+    minQuantity: z.coerce.number().min(1, {
+      message: 'Valor deve ser pelo menos 1',
+    }),
   })
 
   type ProductSchema = z.output<typeof productSchema>
@@ -194,12 +188,13 @@ export const Product = () => {
                 label="Quantidade em Estoque"
                 placeholder="15"
                 type="number"
+                min={0}
                 value={quantityInput}
                 register={register}
                 required
                 containerClassName="sm:flex-1"
                 error={errors.quantity?.message ? errors.quantity?.message : ''}
-                onChange={e => setQuantityInput(e.target.value)}
+                onChange={e => setQuantityInput(Number(e.target.value))}
               />
 
               <div className="flex flex-col gap-2 sm:flex-1">
@@ -209,6 +204,7 @@ export const Product = () => {
                   label="Quantidade Mínima"
                   placeholder="20"
                   type="number"
+                  min={0}
                   value={minQuantityInput}
                   register={register}
                   required
@@ -217,7 +213,7 @@ export const Product = () => {
                       ? errors.minQuantity?.message
                       : ''
                   }
-                  onChange={e => setMinQuantityInput(e.target.value)}
+                  onChange={e => setMinQuantityInput(Number(e.target.value))}
                 />
 
                 <span className="text-slate-gray text-[14px]/[20px] font-normal">

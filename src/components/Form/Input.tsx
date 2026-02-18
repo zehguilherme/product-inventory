@@ -13,6 +13,7 @@ interface InputProps<
   placeholder?: string
   type: InputType
   disabled?: boolean
+  min?: number
   error?: string
   containerClassName?: string
   labelClassName?: string
@@ -31,6 +32,7 @@ export const Input = <T extends FieldValues>({
   placeholder,
   type,
   disabled,
+  min,
   error,
   containerClassName,
   labelClassName,
@@ -42,6 +44,21 @@ export const Input = <T extends FieldValues>({
   ...props
 }: InputProps<T>) => {
   const hasIcon = Boolean(children)
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value
+
+    if (
+      type === 'number' &&
+      min !== undefined &&
+      newValue !== '' &&
+      Number(newValue) < min
+    ) {
+      return
+    }
+
+    onChange(event)
+  }
 
   return (
     <div className={`flex w-full flex-col ${containerClassName}`}>
@@ -69,11 +86,12 @@ export const Input = <T extends FieldValues>({
             type={type}
             placeholder={placeholder}
             disabled={disabled}
+            min={min}
             {...(register &&
               register(name, {
                 required: required,
               }))}
-            onChange={onChange}
+            onChange={handleChange}
             className={`${disabled ? 'bg-westar cursor-not-allowed' : ''} outline-royal-blue border-mystic bg-athens-gray text-ebony placeholder:text-slate-gray h-10 w-full rounded-md border py-3 text-[14px]/[16.9px] font-normal placeholder:text-[14px]/[16.9px] placeholder:font-normal ${hasIcon ? 'pr-3.25 pl-10.25' : 'px-3.25'} ${inputClassName}`}
           />
         </div>
