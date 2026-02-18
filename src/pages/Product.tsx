@@ -1,10 +1,16 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import axios, { type AxiosResponse } from 'axios'
+import { toast } from 'react-toastify'
 
 import { Input } from '../components/Form/Input'
 import { Select } from '../components/Form/Select'
 import { Button } from '../components/Button'
 import { Arrow } from '../components/icons/Arrow'
+import { ErrorModal } from '../components/ErrorModal'
 
 export const Product = () => {
   const [productNameInput, setProductNameInput] = useState('')
@@ -12,6 +18,10 @@ export const Product = () => {
   const [priceInput, setPriceInput] = useState('')
   const [quantityInput, setQuantityInput] = useState('')
   const [minQuantityInput, setMinQuantityInput] = useState('')
+
+  const [errorModalIsOpen, setErrorModalIsOpen] = useState(false)
+  const [errorTitle, setErrorTitle] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const [categoriesList] = useState([
     {
@@ -32,8 +42,88 @@ export const Product = () => {
     },
   ])
 
+  const navigate = useNavigate()
+
+  const productSchema = z.object({
+    name: z
+      .string()
+      .trim()
+      .normalize()
+      .min(1, {
+        message: 'Campo obrigatório',
+      })
+      .max(255, {
+        message: 'Máximo de 255 caracteres',
+      }),
+    category: z.string().trim().min(1, {
+      message: 'Campo obrigatório',
+    }),
+    price: z.string().trim().min(1, {
+      message: 'Campo obrigatório',
+    }),
+    quantity: z.coerce
+      .number()
+      .min(0, {
+        message: 'Campo obrigatório',
+      })
+      .nonnegative(),
+    minQuantity: z.coerce
+      .number()
+      .min(1, {
+        message: 'Insira pelos menos 1 item',
+      })
+      .nonnegative(),
+  })
+
+  type ProductSchema = z.output<typeof productSchema>
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(productSchema),
+    mode: 'all',
+  })
+
+  const handleSubmitForm = async (data: ProductSchema) => {
+    try {
+      const response: AxiosResponse<ProductSchema> = await axios.post(
+        `${import.meta.env.VITE_API_URL}/products`,
+        data
+      )
+
+      if (response.status === 201 && response.data) {
+        const product = response.data
+
+        toast(`Produto ${product.name} adicionado com sucesso!`, {
+          type: 'success',
+        })
+
+        navigate('/')
+      }
+    } catch (error: unknown) {
+      setErrorModalIsOpen(true)
+
+      setErrorTitle('Erro')
+
+      if (error instanceof Error) {
+        setErrorMessage(error.message)
+      }
+    }
+  }
+
   return (
     <main className="px-3 py-8">
+      <ErrorModal
+        isOpen={errorModalIsOpen}
+        title={errorTitle}
+        message={errorMessage}
+        onClose={() => {
+          setErrorModalIsOpen(false)
+        }}
+      />
+
       <div className="mx-auto max-w-2xl">
         <Link
           to="/"
@@ -54,7 +144,10 @@ export const Product = () => {
         </header>
 
         <section className="border-mystic rounded-lg border bg-white p-6 drop-shadow-md">
-          <form onSubmit={() => {}} className="flex flex-col gap-6">
+          <form
+            onSubmit={handleSubmit(handleSubmitForm)}
+            className="flex flex-col gap-6"
+          >
             <Input
               id="name"
               name="name"
@@ -62,7 +155,9 @@ export const Product = () => {
               placeholder="Ex: iPhone 15 Pro"
               type="text"
               value={productNameInput}
-              containerClassName=""
+              register={register}
+              required
+              error={errors.name?.message ? errors.name?.message : ''}
               onChange={e => setProductNameInput(e.target.value)}
             />
 
@@ -72,8 +167,10 @@ export const Product = () => {
               label="Categoria"
               value={categoryInput}
               optionsList={categoriesList}
+              register={register}
+              required
               defaultOptionText="Selecione uma categoria..."
-              containerClassName=""
+              error={errors.category?.message ? errors.category?.message : ''}
               onChange={e => setCategoryInput(e.target.value)}
             />
 
@@ -84,7 +181,9 @@ export const Product = () => {
               placeholder="R$ 1000,00"
               type="number"
               value={priceInput}
-              containerClassName=""
+              register={register}
+              required
+              error={errors.price?.message ? errors.price?.message : ''}
               onChange={e => setPriceInput(e.target.value)}
             />
 
@@ -96,7 +195,10 @@ export const Product = () => {
                 placeholder="15"
                 type="number"
                 value={quantityInput}
+                register={register}
+                required
                 containerClassName="sm:flex-1"
+                error={errors.quantity?.message ? errors.quantity?.message : ''}
                 onChange={e => setQuantityInput(e.target.value)}
               />
 
@@ -108,7 +210,13 @@ export const Product = () => {
                   placeholder="20"
                   type="number"
                   value={minQuantityInput}
-                  containerClassName=""
+                  register={register}
+                  required
+                  error={
+                    errors.minQuantity?.message
+                      ? errors.minQuantity?.message
+                      : ''
+                  }
                   onChange={e => setMinQuantityInput(e.target.value)}
                 />
 
@@ -119,11 +227,7 @@ export const Product = () => {
             </div>
 
             <div className="flex items-center justify-end">
-              <Button
-                className="w-full sm:max-w-38.25"
-                type="submit"
-                onClick={() => {}}
-              >
+              <Button className="w-full sm:max-w-38.25" type="submit">
                 Adicionar Produto
               </Button>
             </div>

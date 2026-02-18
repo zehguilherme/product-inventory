@@ -1,26 +1,31 @@
 import type { SelectHTMLAttributes } from 'react'
+import type { FieldValues, Path, UseFormRegister } from 'react-hook-form'
 
 type OptionType = {
   value: string
   text: string
 }[]
 
-interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+interface SelectProps<
+  T extends FieldValues,
+> extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
   id: string
-  name: string
+  name: Path<T>
   value: string
   optionsList: OptionType
   disabled?: boolean
   error?: string
   defaultOptionText?: string
+  required?: boolean
+  register?: UseFormRegister<T>
   containerClassName?: string
   labelClassName?: string
   inputClassName?: string
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
-export const Select = ({
+export const Select = <T extends FieldValues>({
   label,
   id,
   name,
@@ -29,12 +34,14 @@ export const Select = ({
   disabled,
   error,
   defaultOptionText,
+  required,
+  register,
   containerClassName,
   labelClassName,
   inputClassName,
   onChange,
   ...props
-}: SelectProps) => {
+}: SelectProps<T>) => {
   return (
     <div className={`flex w-full flex-col ${containerClassName}`}>
       <div className="flex w-full flex-col gap-3.25">
@@ -49,9 +56,12 @@ export const Select = ({
 
         <select
           {...props}
-          name={name}
           id={id}
           value={value}
+          {...(register &&
+            register(name, {
+              required: required,
+            }))}
           onChange={onChange}
           className={`${disabled ? 'bg-westar cursor-not-allowed' : ''} border-mystic bg-athens-gray text-ebony outline-royal-blue placeholder:text-slate-gray h-10 rounded-md border px-3 py-2.25 text-[14px]/[20px] font-normal placeholder:text-[14px]/[16.9px] placeholder:font-normal ${value === '' ? 'text-slate-gray' : ''} ${inputClassName}`}
         >
@@ -70,7 +80,7 @@ export const Select = ({
         </select>
       </div>
 
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      {error && <p className="text-flamingo mt-1 text-sm">{error}</p>}
     </div>
   )
 }

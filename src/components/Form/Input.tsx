@@ -1,12 +1,15 @@
 import type { InputHTMLAttributes, ReactNode } from 'react'
+import type { FieldValues, Path, UseFormRegister } from 'react-hook-form'
 
 type InputType = InputHTMLAttributes<HTMLInputElement>['type']
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps<
+  T extends FieldValues,
+> extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
   id: string
-  name: string
-  value: string
+  name: Path<T>
+  value: string | number
   placeholder?: string
   type: InputType
   disabled?: boolean
@@ -14,11 +17,13 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   containerClassName?: string
   labelClassName?: string
   inputClassName?: string
+  required?: boolean
+  register?: UseFormRegister<T>
   children?: ReactNode
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export const Input = ({
+export const Input = <T extends FieldValues>({
   label,
   id,
   name,
@@ -30,10 +35,12 @@ export const Input = ({
   containerClassName,
   labelClassName,
   inputClassName,
+  required,
+  register,
   onChange,
   children,
   ...props
-}: InputProps) => {
+}: InputProps<T>) => {
   const hasIcon = Boolean(children)
 
   return (
@@ -58,18 +65,21 @@ export const Input = ({
           <input
             {...props}
             id={id}
-            name={name}
             value={value}
             type={type}
             placeholder={placeholder}
             disabled={disabled}
+            {...(register &&
+              register(name, {
+                required: required,
+              }))}
             onChange={onChange}
             className={`${disabled ? 'bg-westar cursor-not-allowed' : ''} outline-royal-blue border-mystic bg-athens-gray text-ebony placeholder:text-slate-gray h-10 w-full rounded-md border py-3 text-[14px]/[16.9px] font-normal placeholder:text-[14px]/[16.9px] placeholder:font-normal ${hasIcon ? 'pr-3.25 pl-10.25' : 'px-3.25'} ${inputClassName}`}
           />
         </div>
       </div>
 
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      {error && <p className="text-flamingo mt-1 text-sm">{error}</p>}
     </div>
   )
 }
