@@ -38,6 +38,10 @@ export const Table = ({
     return 'Em Estoque'
   }
 
+  const displayTextWithFirstLetterCapitalized = (text: string) => {
+    return text.charAt(0).toUpperCase() + text.slice(1)
+  }
+
   return (
     <div className="border-mystic overflow-x-auto rounded-lg border">
       <table className="w-full table-fixed bg-white drop-shadow-md">
@@ -62,12 +66,12 @@ export const Table = ({
                 className="border-b-mystic border border-x-0 last:border-b-0"
               >
                 <td className="text-ebony px-4 py-[22.5px] text-[14px]/[20px] font-medium">
-                  {row.name}
+                  {displayTextWithFirstLetterCapitalized(row.name)}
                 </td>
 
                 <td className="px-4 py-[22.5px]">
                   <span className="bg-catskill-white2 text-slate-gray inline-block h-6 rounded-md px-2.5 py-0.5 text-[14px]/[20px] font-normal">
-                    {row.category}
+                    {displayTextWithFirstLetterCapitalized(row.category)}
                   </span>
                 </td>
 
