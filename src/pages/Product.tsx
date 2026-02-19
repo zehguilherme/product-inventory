@@ -91,18 +91,25 @@ export const Product = () => {
         data
       )
 
-      if (response.status === 201 && response.data) {
-        const product = response.data
+      if (response.status !== 201 || !response.data) {
+        setErrorModalIsOpen(true)
+        setErrorTitle('Erro')
+        setErrorMessage(
+          'Não foi possível adicionar o produto! Tente novamente mais tarde!'
+        )
 
-        toast(`Produto "${product.name}" adicionado com sucesso!`, {
-          type: 'success',
-        })
-
-        navigate('/')
+        return
       }
+
+      const product = response.data
+
+      toast(`Produto "${product.name}" adicionado com sucesso!`, {
+        type: 'success',
+      })
+
+      navigate('/')
     } catch (error: unknown) {
       setErrorModalIsOpen(true)
-
       setErrorTitle('Erro')
 
       if (error instanceof Error) {
