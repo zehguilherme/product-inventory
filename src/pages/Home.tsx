@@ -33,7 +33,7 @@ export const Home = () => {
 
   const [productToDelete, setProductToDelete] = useState<TableRow | null>(null)
 
-  const [categoriesList] = useState([
+  const categoriesList = [
     {
       value: 'armazenamento',
       text: 'Armazenamento',
@@ -50,9 +50,9 @@ export const Home = () => {
       value: 'perifericos',
       text: 'Periféricos',
     },
-  ])
+  ]
 
-  const [statusList] = useState([
+  const statusList = [
     {
       value: 'estoque',
       text: 'Em Estoque',
@@ -65,7 +65,7 @@ export const Home = () => {
       value: 'sem-estoque',
       text: 'Sem Estoque',
     },
-  ])
+  ]
 
   const tableColumnNames = [
     'Nome',
