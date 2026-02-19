@@ -23,7 +23,7 @@ export const Product = () => {
   const [errorTitle, setErrorTitle] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const [categoriesList] = useState([
+  const categoriesList = [
     {
       value: 'armazenamento',
       text: 'Armazenamento',
@@ -40,7 +40,7 @@ export const Product = () => {
       value: 'perifericos',
       text: 'Periféricos',
     },
-  ])
+  ]
 
   const navigate = useNavigate()
 
