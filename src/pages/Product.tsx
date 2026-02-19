@@ -23,6 +23,8 @@ export const Product = () => {
   const [errorTitle, setErrorTitle] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
+  const [isLoading, setIsLoading] = useState(false)
+
   const categoriesList = [
     {
       value: 'armazenamento',
@@ -74,7 +76,7 @@ export const Product = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isValidating },
   } = useForm({
     resolver: zodResolver(productSchema),
     mode: 'all',
@@ -82,6 +84,8 @@ export const Product = () => {
 
   const handleSubmitForm = async (data: ProductSchema) => {
     try {
+      setIsLoading(true)
+
       const response: AxiosResponse<ProductSchema> = await axios.post(
         `${import.meta.env.VITE_API_URL}/products`,
         data
@@ -104,6 +108,8 @@ export const Product = () => {
       if (error instanceof Error) {
         setErrorMessage(error.message)
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -223,7 +229,12 @@ export const Product = () => {
             </div>
 
             <div className="flex items-center justify-end">
-              <Button className="w-full sm:max-w-38.25" type="submit">
+              <Button
+                disabled={isLoading || !isValid || isValidating}
+                className="w-full sm:max-w-38.25"
+                type="submit"
+                loading={isLoading}
+              >
                 Adicionar Produto
               </Button>
             </div>
