@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import axios, { type AxiosResponse } from 'axios'
 
+import { toast } from 'react-toastify'
+
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Input } from '../components/Form/Input'
@@ -98,6 +100,50 @@ export const Home = () => {
     }
 
     return 'Em Estoque'
+  }
+
+  const deleteProduct = async () => {
+    if (!productToDelete) {
+      return
+    }
+
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/products/${productToDelete.id}`
+      )
+
+      if (response.status !== 200) {
+        setDeleteModalIsOpen(false)
+        setProductToDelete(null)
+        setErrorModalIsOpen(true)
+        setErrorTitle('Erro')
+        setErrorMessage(
+          'Não foi possível remover o produto! Tente novamente mais tarde!'
+        )
+
+        return
+      }
+
+      setTableRows(prevRows =>
+        prevRows.filter(row => row.id !== productToDelete.id)
+      )
+
+      setDeleteModalIsOpen(false)
+      setProductToDelete(null)
+
+      toast(`Produto "${productToDelete.name}" removido com sucesso!`, {
+        type: 'success',
+      })
+    } catch (error: unknown) {
+      setDeleteModalIsOpen(false)
+      setProductToDelete(null)
+      setErrorModalIsOpen(true)
+      setErrorTitle('Erro')
+
+      if (error instanceof Error) {
+        setErrorMessage(error.message)
+      }
+    }
   }
 
   useEffect(() => {
@@ -228,7 +274,7 @@ export const Home = () => {
           isOpen={deleteModalIsOpen}
           title="Remover Produto"
           productName={productToDelete?.name || ''}
-          deleteProduct={() => {}}
+          deleteProduct={deleteProduct}
           onClose={() => {
             setDeleteModalIsOpen(false)
             setProductToDelete(null)
