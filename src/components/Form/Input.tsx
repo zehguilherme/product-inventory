@@ -69,6 +69,8 @@ export const Input = <T extends FieldValues>({
             className={`${disabled ? 'cursor-not-allowed' : ''} text-ebony text-[14px]/[14px] font-medium ${labelClassName}`}
           >
             {label}
+
+            {required && <span>*</span>}
           </label>
         )}
 
