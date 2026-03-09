@@ -36,8 +36,7 @@ export const Home = () => {
 
   const [productToDelete, setProductToDelete] = useState<TableRow | null>(null)
 
-  const [loading, setLoading, loadingText, setLoadingText] =
-    useContext(LoadingContext)
+  const [, setLoading, , setLoadingText] = useContext(LoadingContext)
 
   const categoriesList = [
     {
