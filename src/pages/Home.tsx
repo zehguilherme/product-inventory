@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import axios, { type AxiosResponse } from 'axios'
 
@@ -13,6 +13,7 @@ import { Select } from '../components/Form/Select'
 import { Table } from '../components/Table'
 import { DeleteModal } from '../components/DeleteModal'
 import { ErrorModal } from '../components/ErrorModal'
+import { LoadingContext } from '../App'
 
 interface TableRow {
   name: string
@@ -34,6 +35,9 @@ export const Home = () => {
   const [errorMessage, setErrorMessage] = useState('')
 
   const [productToDelete, setProductToDelete] = useState<TableRow | null>(null)
+
+  const [loading, setLoading, loadingText, setLoadingText] =
+    useContext(LoadingContext)
 
   const categoriesList = [
     {
@@ -108,6 +112,9 @@ export const Home = () => {
     }
 
     try {
+      setLoading(true)
+      setLoadingText('Removendo produto...')
+
       const response = await axios.delete(
         `${import.meta.env.VITE_API_URL}/products/${productToDelete.id}`
       )
@@ -124,9 +131,7 @@ export const Home = () => {
         return
       }
 
-      setTableRows(prevRows =>
-        prevRows.filter(row => row.id !== productToDelete.id)
-      )
+      await getProducts()
 
       setDeleteModalIsOpen(false)
       setProductToDelete(null)
@@ -143,28 +148,35 @@ export const Home = () => {
       if (error instanceof Error) {
         setErrorMessage(error.message)
       }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getProducts = async () => {
+    try {
+      setLoading(true)
+      setLoadingText('Carregando produtos...')
+
+      const products: AxiosResponse<TableRow[]> = await axios.get(
+        `${import.meta.env.VITE_API_URL}/products`
+      )
+
+      setTableRows(products.data)
+    } catch (error: unknown) {
+      setErrorModalIsOpen(true)
+
+      setErrorTitle('Erro')
+
+      if (error instanceof Error) {
+        setErrorMessage(error.message)
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
   useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const products: AxiosResponse<TableRow[]> = await axios.get(
-          `${import.meta.env.VITE_API_URL}/products`
-        )
-
-        setTableRows(products.data)
-      } catch (error: unknown) {
-        setErrorModalIsOpen(true)
-
-        setErrorTitle('Erro')
-
-        if (error instanceof Error) {
-          setErrorMessage(error.message)
-        }
-      }
-    }
-
     getProducts()
   }, [])
 
@@ -185,6 +197,26 @@ export const Home = () => {
   return (
     <main className="px-3 py-8">
       <section className="mx-auto max-w-342">
+        <DeleteModal
+          isOpen={deleteModalIsOpen}
+          title="Remover Produto"
+          productName={productToDelete?.name || ''}
+          deleteProduct={deleteProduct}
+          onClose={() => {
+            setDeleteModalIsOpen(false)
+            setProductToDelete(null)
+          }}
+        />
+
+        <ErrorModal
+          isOpen={errorModalIsOpen}
+          title={errorTitle}
+          message={errorMessage}
+          onClose={() => {
+            setErrorModalIsOpen(false)
+          }}
+        />
+
         <header className="mb-8 flex flex-wrap items-center justify-between gap-6 sm:gap-0">
           <div className="flex flex-col gap-1">
             <h1 className="text-ebony text-3xl/[36px] font-bold">Produtos</h1>
@@ -267,26 +299,6 @@ export const Home = () => {
           openModalDeleteProduct={(product: TableRow) => {
             setProductToDelete(product)
             setDeleteModalIsOpen(true)
-          }}
-        />
-
-        <DeleteModal
-          isOpen={deleteModalIsOpen}
-          title="Remover Produto"
-          productName={productToDelete?.name || ''}
-          deleteProduct={deleteProduct}
-          onClose={() => {
-            setDeleteModalIsOpen(false)
-            setProductToDelete(null)
-          }}
-        />
-
-        <ErrorModal
-          isOpen={errorModalIsOpen}
-          title={errorTitle}
-          message={errorMessage}
-          onClose={() => {
-            setErrorModalIsOpen(false)
           }}
         />
       </section>
