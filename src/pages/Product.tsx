@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,6 +11,7 @@ import { Select } from '../components/Form/Select'
 import { Button } from '../components/Button'
 import { Arrow } from '../components/icons/Arrow'
 import { ErrorModal } from '../components/ErrorModal'
+import { LoadingContext } from '../App'
 
 export const Product = () => {
   const [productNameInput, setProductNameInput] = useState('')
@@ -23,7 +24,7 @@ export const Product = () => {
   const [errorTitle, setErrorTitle] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading, , setLoadingText] = useContext(LoadingContext)
 
   const categoriesList = [
     {
@@ -76,7 +77,7 @@ export const Product = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid, isValidating },
+    formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(productSchema),
     mode: 'all',
@@ -84,7 +85,8 @@ export const Product = () => {
 
   const handleSubmitForm = async (data: ProductSchema) => {
     try {
-      setIsLoading(true)
+      setLoading(true)
+      setLoadingText('Adicionando produto...')
 
       const response: AxiosResponse<ProductSchema> = await axios.post(
         `${import.meta.env.VITE_API_URL}/products`,
@@ -116,7 +118,7 @@ export const Product = () => {
         setErrorMessage(error.message)
       }
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
@@ -237,10 +239,10 @@ export const Product = () => {
 
             <div className="flex items-center justify-end">
               <Button
-                disabled={isLoading || !isValid || isValidating}
+                disabled={loading || !isValid}
                 className="w-full sm:max-w-38.25"
                 type="submit"
-                loading={isLoading}
+                loading={loading}
               >
                 Adicionar Produto
               </Button>
