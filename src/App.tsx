@@ -1,21 +1,41 @@
 import { Route, Routes } from 'react-router'
 import { ToastContainer } from 'react-toastify'
+import { createContext, useState } from 'react'
 
 import { Header } from './components/Header'
 import { Home } from './pages/Home'
 import { Product } from './pages/Product'
+import { Loading } from './components/Loading'
+
+export const LoadingContext = createContext<
+  [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>,
+    string,
+    React.Dispatch<React.SetStateAction<string>>,
+  ]
+>([false, () => null, '', () => null])
 
 export function App() {
+  const [loading, setLoading] = useState(false)
+  const [loadingText, setLoadingText] = useState('')
+
   return (
-    <div className="font-display bg-athens-gray h-screen">
-      <ToastContainer />
+    <LoadingContext.Provider
+      value={[loading, setLoading, loadingText, setLoadingText]}
+    >
+      <div className="font-display bg-athens-gray h-screen">
+        <ToastContainer />
 
-      <Header />
+        {loading && <Loading message={loadingText} />}
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/produto" element={<Product />} />
-      </Routes>
-    </div>
+        <Header />
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/produto" element={<Product />} />
+        </Routes>
+      </div>
+    </LoadingContext.Provider>
   )
 }
