@@ -7,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean
   disabled?: boolean
   variant?: ButtonVariant
+  hasIcon?: boolean
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -21,13 +22,16 @@ export const Button = ({
   loading,
   className,
   variant = 'primary',
+  hasIcon,
   ...props
 }: ButtonProps) => {
+  const isDisabled = disabled || loading
+
   return (
     <button
       {...props}
-      disabled={disabled || loading}
-      className={`${disabled ? 'bg-westar text-gray-400' : `${variantClasses[variant]} transition`} flex h-10 ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} items-center justify-center rounded-md px-4 py-2 text-[14px]/[20px] font-medium ${className}`}
+      disabled={isDisabled}
+      className={`${isDisabled ? 'bg-westar cursor-not-allowed text-gray-400' : `${variantClasses[variant]} cursor-pointer transition`} flex h-10 items-center justify-center rounded-md px-4 py-2 text-[14px]/[20px] font-medium ${hasIcon ? 'gap-4' : ''} ${className}`}
     >
       {loading ? 'Carregando...' : children}
     </button>
