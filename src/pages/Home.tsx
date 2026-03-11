@@ -227,7 +227,8 @@ export const Home = () => {
 
           <Button
             onClick={navigateToNewProductPage}
-            className="w-full gap-4 sm:w-auto"
+            className="w-full sm:w-auto"
+            hasIcon
           >
             <Plus className="text-catskill-white h-4" />
             Novo Produto
