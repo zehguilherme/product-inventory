@@ -18,7 +18,7 @@ import { LoadingContext } from '../App'
 interface TableRow {
   name: string
   category: string
-  price: string
+  price: number
   quantity: number
   minQuantity: number
   id: string

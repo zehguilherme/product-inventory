@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import axios, { type AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
+import { currency } from 'remask'
 
 import { Input } from '../components/Form/Input'
 import { Select } from '../components/Form/Select'
@@ -61,9 +62,26 @@ export const Product = () => {
     category: z.string().trim().min(1, {
       message: 'Campo obrigatório',
     }),
-    price: z.string().trim().min(1, {
-      message: 'Campo obrigatório',
-    }),
+    price: z
+      .string()
+      .trim()
+      .min(1, {
+        message: 'Campo obrigatório',
+      })
+      .refine(
+        val => {
+          const num = currency.unmask({
+            locale: 'pt-BR',
+            currency: 'BRL',
+            value: val,
+          })
+
+          return !isNaN(num) && num > 0
+        },
+        {
+          message: 'Valor inválido',
+        }
+      ),
     quantity: z.coerce.number().min(0, {
       message: 'Valor não pode ser negativo',
     }),
@@ -88,9 +106,18 @@ export const Product = () => {
       setLoading(true)
       setLoadingText('Adicionando produto...')
 
+      const priceValue = currency.unmask({
+        locale: 'pt-BR',
+        currency: 'BRL',
+        value: data.price,
+      })
+
       const response: AxiosResponse<ProductSchema> = await axios.post(
         `${import.meta.env.VITE_API_URL}/products`,
-        data
+        {
+          ...data,
+          price: priceValue,
+        }
       )
 
       if (response.status !== 201 || !response.data) {
@@ -187,13 +214,25 @@ export const Product = () => {
               id="price"
               name="price"
               label="Preço (R$)"
-              placeholder="R$ 1000,00"
-              type="number"
+              placeholder="R$ 199,99"
+              type="text"
               value={priceInput}
               register={register}
               required
               error={errors.price?.message ? errors.price?.message : ''}
-              onChange={e => setPriceInput(e.target.value)}
+              onChange={e => {
+                const rawValue = e.target.value.replace(/\D/g, '')
+
+                const valueAsCents = Number(rawValue) / 100
+
+                const formatted = currency.mask({
+                  locale: 'pt-BR',
+                  currency: 'BRL',
+                  value: valueAsCents || 0,
+                })
+
+                setPriceInput(formatted)
+              }}
             />
 
             <div className="flex flex-col gap-6 sm:flex-row">

@@ -1,12 +1,14 @@
+import { Link } from 'react-router'
+import { currency } from 'remask'
+
 import { Circle } from '../components/icons/Circle'
 import { Pencil } from '../components/icons/Pencil'
 import { Trash } from '../components/icons/Trash'
-import { Link } from 'react-router'
 
 interface TableRow {
   name: string
   category: string
-  price: string
+  price: number
   quantity: number
   minQuantity: number
   id: string
@@ -39,7 +41,15 @@ export const Table = ({
   }
 
   const displayTextWithFirstLetterCapitalized = (text: string) => {
-    return text.charAt(0).toUpperCase() + text.slice(1)
+    return text?.charAt(0)?.toUpperCase() + text?.slice(1)
+  }
+
+  const transformValueInCurrencyValue = (value: number) => {
+    return currency.mask({
+      locale: 'pt-BR',
+      currency: 'BRL',
+      value: value || 0,
+    })
   }
 
   return (
@@ -76,7 +86,7 @@ export const Table = ({
                 </td>
 
                 <td className="text-ebony px-4 py-[22.5px] text-[14px]/[20px] font-medium">
-                  R$ {row.price}
+                  {transformValueInCurrencyValue(row.price)}
                 </td>
 
                 <td className="text-ebony px-4 py-[22.5px] text-[14px]/[20px] font-medium">
