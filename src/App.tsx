@@ -34,6 +34,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/produto" element={<Product />} />
+          <Route path="/produto/:id" element={<Product />} />
         </Routes>
       </div>
     </LoadingContext.Provider>

@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { useContext, useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -13,6 +13,15 @@ import { Button } from '../components/Button'
 import { Arrow } from '../components/icons/Arrow'
 import { ErrorModal } from '../components/ErrorModal'
 import { LoadingContext } from '../App'
+
+interface Product {
+  id: number
+  name: string
+  category: string
+  price: number
+  quantity: number
+  minQuantity: number
+}
 
 export const Product = () => {
   const [productNameInput, setProductNameInput] = useState('')
@@ -47,6 +56,10 @@ export const Product = () => {
   ]
 
   const navigate = useNavigate()
+
+  const { id } = useParams<{ id: string }>()
+
+  const isEditing = !!id
 
   const productSchema = z.object({
     name: z
@@ -95,13 +108,56 @@ export const Product = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(productSchema),
     mode: 'all',
   })
 
-  const handleSubmitForm = async (data: ProductSchema) => {
+  const getProductData = async () => {
+    try {
+      setLoading(true)
+      setLoadingText('Carregando dados do produto...')
+
+      const response: AxiosResponse<Product> = await axios.get(
+        `${import.meta.env.VITE_API_URL}/products/${id}`
+      )
+
+      const { name, category, price, quantity, minQuantity } = response.data
+
+      const formattedPrice = currency.mask({
+        locale: 'pt-BR',
+        currency: 'BRL',
+        value: price || 0,
+      })
+
+      setProductNameInput(name)
+      setCategoryInput(category)
+      setPriceInput(formattedPrice)
+      setQuantityInput(quantity)
+      setMinQuantityInput(minQuantity)
+
+      reset({
+        name,
+        category,
+        price: formattedPrice,
+        quantity,
+        minQuantity,
+      })
+    } catch (error) {
+      setErrorModalIsOpen(true)
+      setErrorTitle('Erro')
+
+      if (error instanceof Error) {
+        setErrorMessage(error.message)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const registerProduct = async (data: ProductSchema) => {
     try {
       setLoading(true)
       setLoadingText('Adicionando produto...')
@@ -149,6 +205,68 @@ export const Product = () => {
     }
   }
 
+  const editProduct = async (data: ProductSchema) => {
+    try {
+      setLoading(true)
+      setLoadingText('Salvando informações do produto...')
+
+      const priceValue = currency.unmask({
+        locale: 'pt-BR',
+        currency: 'BRL',
+        value: data.price,
+      })
+
+      const response: AxiosResponse<ProductSchema> = await axios.put(
+        `${import.meta.env.VITE_API_URL}/products/${id}`,
+        {
+          ...data,
+          price: priceValue,
+        }
+      )
+
+      if (response.status !== 200 || !response.data) {
+        setErrorModalIsOpen(true)
+        setErrorTitle('Erro')
+        setErrorMessage(
+          'Não foi salvar as informações do produto! Tente novamente mais tarde!'
+        )
+
+        return
+      }
+
+      const product = response.data
+
+      toast(`Informações do produto "${product.name}" salvas com sucesso!`, {
+        type: 'success',
+      })
+
+      navigate('/')
+    } catch (error: unknown) {
+      setErrorModalIsOpen(true)
+      setErrorTitle('Erro')
+
+      if (error instanceof Error) {
+        setErrorMessage(error.message)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSubmitForm = async (data: ProductSchema) => {
+    if (isEditing) {
+      editProduct(data)
+    } else {
+      await registerProduct(data)
+    }
+  }
+
+  useEffect(() => {
+    if (isEditing) {
+      getProductData()
+    }
+  }, [])
+
   return (
     <main className="px-3 py-8">
       <ErrorModal
@@ -171,11 +289,13 @@ export const Product = () => {
 
         <header className="mb-8 flex flex-col gap-1">
           <h1 className="text-ebony text-[30px]/[36px] font-bold">
-            Novo Produto
+            {isEditing ? 'Editar Produto' : 'Novo Produto'}
           </h1>
 
           <p className="text-slate-gray text-[16px]/[24px] font-normal">
-            Preencha os dados para adicionar um novo produto
+            {isEditing
+              ? 'Altere os dados do produto "Nome produto"'
+              : 'Preencha os dados para adicionar um novo produto'}
           </p>
         </header>
 
@@ -283,7 +403,7 @@ export const Product = () => {
                 type="submit"
                 loading={loading}
               >
-                Adicionar Produto
+                {isEditing ? 'Salvar Alterações' : 'Adicionar Produto'}
               </Button>
             </div>
           </form>
