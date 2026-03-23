@@ -3,7 +3,7 @@ import { Box } from '../components/icons/Box'
 
 export const NotFound = () => {
   return (
-    <div className="flex min-h-[calc(100vh-65px)] flex-col items-center justify-center px-4">
+    <div className="flex min-h-[calc(100vh-65px)] flex-col items-center justify-center px-3 py-8">
       <div className="mb-8 flex items-center gap-3">
         <div className="bg-royal-blue rounded-lg p-2.5">
           <Box className="text-catskill-white h-5" />
