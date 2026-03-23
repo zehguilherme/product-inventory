@@ -5,6 +5,7 @@ import { createContext, useState } from 'react'
 import { Header } from './components/Header'
 import { Home } from './pages/Home'
 import { Product } from './pages/Product'
+import { NotFound } from './pages/NotFound'
 import { Loading } from './components/Loading'
 
 export const LoadingContext = createContext<
@@ -35,6 +36,7 @@ export function App() {
           <Route path="/" element={<Home />} />
           <Route path="/produto" element={<Product />} />
           <Route path="/produto/:id" element={<Product />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </LoadingContext.Provider>
