@@ -119,17 +119,31 @@ interface Props {
 
 The following custom colors are available in `src/index.css`:
 
-| Token                    | Hex       | Usage           |
-| ------------------------ | --------- | --------------- |
-| `--color-athens-gray`    | `#f9fafb` | Background      |
-| `--color-royal-blue`     | `#2463eb` | Primary buttons |
-| `--color-flamingo`       | `#ef4343` | Danger buttons  |
-| `--color-ebony`          | `#0f1729` | Headings        |
-| `--color-slate-gray`     | `#65758b` | Secondary text  |
-| `--color-catskill-white` | `#f9fafb` | Button text     |
-| `--color-mystic`         | `#e1e7ef` | Borders         |
-| `--color-salem`          | `#16a249` | Success states  |
-| `--color-buttercup`      | `#fe7b02` | Warning states  |
+| Token                        | Hex         | Usage               |
+| ---------------------------- | ----------- | ------------------- |
+| `--color-athens-gray`        | `#f9fafb`   | Background          |
+| `--color-royal-blue`         | `#2463eb`   | Primary buttons     |
+| `--color-royal-blue-90`      | `#2463eb90` | Primary (disabled)  |
+| `--color-flamingo`           | `#ef4343`   | Danger buttons      |
+| `--color-flamingo-90`        | `#ef434390` | Danger (disabled)   |
+| `--color-ebony`              | `#0f1729`   | Headings            |
+| `--color-slate-gray`         | `#65758b`   | Secondary text      |
+| `--color-catskill-white`     | `#f9fafb`   | Button text         |
+| `--color-catskill-white2`    | `#f1f5f9`   | Light background    |
+| `--color-catskill-white-50`  | `#f1f5f950` | Light bg (disabled) |
+| `--color-mystic`             | `#e1e7ef`   | Borders             |
+| `--color-salem`              | `#16a249`   | Success states      |
+| `--color-buttercup`          | `#fe7b02`   | Warning states      |
+| `--color-cinderella`         | `#e4fbed`   | Success background  |
+| `--color-light-red`          | `#fde3e3`   | Danger background   |
+| `--color-light-yellow`       | `#fef3e2`   | Warning background  |
+| `--color-cod-gray`           | `#1b1b1b`   | Dark text           |
+| `--color-cotton-seed`        | `#c5c1b9`   | Placeholder text    |
+| `--color-westar`             | `#dcdad5`   | Disabled border     |
+| `--color-spring-wood`        | `#f9fafb`   | Page/section bg     |
+| `--color-white`              | `#ffffff`   | Cards, overlays     |
+| `--color-white-80`           | `#ffffff80` | White (translucent) |
+| `--color--half-spanish-white`| `#e4fbed94` | Success bg (faded)  |
 
 **Font:** `--font-display: 'Inter', sans-serif`
 
@@ -270,20 +284,24 @@ Run `npm run lint` to check. Prettier formatting is integrated via editor.
 
 ## Key Dependencies
 
-| Package               | Purpose                   |
-| --------------------- | ------------------------- |
-| `react` ^19.2.0       | UI library                |
-| `typescript` ~5.9.3    | Type safety (strict mode) |
-| `vite` ^7.2.4        | Build tool                |
-| `tailwindcss` ^4.2.2   | Styling                  |
-| `@tailwindcss/vite` ^4.2.2 | Vite plugin for Tailwind 4 |
-| `axios` ^1.13.6       | HTTP client               |
-| `react-router` ^7.13.1 | Routing                  |
-| `react-hook-form` ^7.72.0 | Form handling        |
-| `@hookform/resolvers` ^5.2.2 | Zod integration   |
-| `zod` ^4.3.6         | Schema validation         |
-| `react-toastify` ^11.0.5 | Notifications        |
-| `remask` ^1.2.2      | Input masks (money, CPF)   |
+| Package               | Purpose                     |
+| --------------------- | --------------------------- |
+| `react` ^19.2.7       | UI library                  |
+| `react-dom` ^19.2.6   | DOM rendering               |
+| `typescript` ~6.0.3   | Type safety (strict mode)   |
+| `vite` ^7.3.2         | Build tool                  |
+| `tailwindcss` ^4.3.0  | Styling                     |
+| `@tailwindcss/vite` ^4.3.0 | Vite plugin for Tailwind 4 |
+| `axios` ^1.17.0       | HTTP client                 |
+| `react-router` ^7.17.0 | Routing                    |
+| `react-hook-form` ^7.78.0 | Form handling           |
+| `@hookform/resolvers` ^5.4.0 | Zod integration      |
+| `zod` ^4.4.3          | Schema validation           |
+| `react-toastify` ^11.1.0 | Notifications            |
+| `remask` ^1.2.2       | Input masks (money, CPF)    |
+| `eslint` ^10.4.1      | Linting                     |
+| `prettier` ^3.8.4     | Code formatter              |
+| `prettier-plugin-tailwindcss` ^0.8.0 | Tailwind class sorting |
 
 ---
 
