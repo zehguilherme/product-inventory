@@ -16,7 +16,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7.79.0",
-    "react-router": "^8.0.0",
+    "react-router": "^8.0.1",
     "react-toastify": "^11.1.0",
     "remask": "^1.2.2",
     "tailwindcss": "^4.3.1",
